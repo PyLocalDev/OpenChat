@@ -1,5 +1,6 @@
 import socket
 import threading
+import customtkinter as ctk
 
 # Global Varibles
 HEADER = 64
@@ -28,7 +29,15 @@ class Server:
             usr_len = int(usr_len)
             usr = conn.recv(usr_len).decode(FORMAT)
         connected = True
-        print(f"[SERVER] {usr} Has Joined the Chat. =D")
+        join = f"[SERVER] {usr} Has Joined the Chat. =D"
+        print(join)
+        with lock:
+            for client in clients:
+                if client != conn:
+                    try:
+                        client.sendall(join.encode(FORMAT))
+                    except:
+                        pass
 
         while connected:
             msg_len = conn.recv(HEADER).decode(FORMAT)
@@ -48,7 +57,15 @@ class Server:
                             except:
                                 pass
 
-        print(f"[SERVER] {usr} Has disconnected. =(")
+        join = f"[SERVER] {usr} Has disconnected. =("
+        print(join)
+        with lock:
+            for client in clients:
+                if client != conn:
+                    try:
+                        client.sendall(join.encode(FORMAT))
+                    except:
+                        pass
         print(f"[SERVER] There are {
               threading.active_count() - 2} in this Chat.")
         conn.close()

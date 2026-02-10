@@ -36,12 +36,13 @@ def mainMenu():
 
 def recive():
     while True:
-        sys.stdout.write("\033[s")
         sys.stdout.flush()
         chat = client.recv(1024).decode(FORMAT)
         if chat:
-            sys.stdout.write('\033[u\033[1A\033[2K' + chat + '\n')
+            print("\n", end="")
+            sys.stdout.write('\033[1A\033[2K' + chat + '\n')
             sys.stdout.flush()
+            print("> ", end="")
 
 
 mainMenu()
