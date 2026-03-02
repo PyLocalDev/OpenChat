@@ -1,4 +1,5 @@
 import customtkinter as ctk
+import tkinter as tk
 import socket
 import threading
 
@@ -27,10 +28,24 @@ class Gui(ctk.CTk):
         self.geometry("800x600")
         self.title("OpenChat")
 
-        ctk.CTkLabel(self, text="Hello World!").place(
-            relx=0.5, rely=0.5, anchor="center")
+        ctk.CTkLabel(
+            self, text="OpenChat - Chat Freely!", font=("hack", 18)).place(anchor="nw", x=15, y=10)
 
+        self.textbox = ctk.CTkTextbox(
+            master=self, width=600, height=400, corner_radius=0)
+        self.textbox.place(anchor="center", relx=0.5, rely=0.5)
+        self.textbox.insert("0.0", "<OpenChat> Hello This is OpenChat!\n")
+        self.textbox.insert("0.0", "<PyLocalDev> And I'm Creator of it!\n")
+
+        self.chatVar = tk.Variable(self)
+        chat = ctk.CTkEntry(self, textvariable=self.chatVar, width=200)
+        chat.place(anchor="sw", relx=0.15, rely=0.90)
+        ctk.CTkButton(self, text="Send", command=self.test).place(
+            anchor="se", relx=0.8, rely=0.9)
         self.mainloop()
+
+    def test(self):
+        self.textbox.insert("0.0", self.chatVar.get() + "\n")
 
 
 class Client:
@@ -51,6 +66,19 @@ class Client:
             chat = self.client.recv(1024).decode(FORMAT)
             if chat:
                 return chat
+
+
+class App(ctk.CTk):
+    def __init__(self):
+        super().__init__()
+        self.grid_rowconfigure(0, weight=1)  # configure grid system
+        self.grid_columnconfigure(0, weight=1)
+
+        self.textbox = ctk.CTkTextbox(master=self, width=400, corner_radius=0)
+        self.textbox.place(anchor="center", relx=0.5, rely=0.5)
+        self.textbox.insert("0.0", "Some example text!\n" * 50)
+
+        self.mainloop()
 
 
 if __name__ == "__main__":
